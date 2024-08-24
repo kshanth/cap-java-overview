@@ -8,6 +8,16 @@
     "@sap/capire-products": "file:sap-capire-products-1.0.0.tgz"
   },
   "devDependencies": {
-    "@sap/cds-dk": "^8"
+    "@sap/cds-dk": "^8",
+    "@sap/ux-specification": "^1.120.17",
+    "rimraf": "^5.0.5"
+  },
+  "sapux": [
+    "app/books"
+  ],
+  "scripts": {
+    "undeploy": "cf undeploy bookstore --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   }
 }

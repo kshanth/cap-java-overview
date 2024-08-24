@@ -17,5 +17,6 @@
       "destination": "srv-api",
       "csrfProtection": true
     }
-  ]
+  ],
+  "welcomeFile": "/comsapbookshopbooks"
 }
