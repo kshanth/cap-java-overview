@@ -1,4 +1,7 @@
-## Create a Reusable Service
+## Create a Reusable Service 
+ **Detailed Instructions:**  [Build a Business Application Using CAP for Java](https://developers.sap.com/mission.cap-java-app.html)
+ 
+
 1. From the terminal window, go to the projects directory and run the following
     ```
     cd projects
@@ -35,12 +38,14 @@
     }
 
     ```
-4. Now start your application by running `mvn spring-boot:run` in the terminal and open it in a new tab
-5. This application will be reused by a bookstore application. The reuse of models can be achieved by publishing NPM modules with the models
+4. Now start your application by running `mvn spring-boot:run` in the terminal and open it in a new tab   
+5. Insert sample data through a HTTP request (refer `requests.http`)
+   
+6. This application will be reused by a bookstore application. The reuse of models can be achieved by publishing NPM modules with the models
     -   Open the package.json file and change the value of name field from `products-service-cds` to `@sap/capire-products`
     -   Create a new file `index.cds` in the `~/projects/products-service` folder and place the following content inside this file
         ```
         using from './db/schema';
         using from './srv/admin-service';
         ```
-In the next tutorial, you will build a bookstore application, reusing the products service application.
+In the next tutorial, you will build a bookstore application by reusing this models.

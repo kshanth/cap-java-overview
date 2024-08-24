@@ -5,3 +5,8 @@ spring:
   sql.init.schema-locations: classpath:schema-h2.sql
 cds:
   data-source.auto-config.enabled: false
+---
+spring:
+  config.activate.on-profile: cloud
+cds:
+  index-page.enabled: true
