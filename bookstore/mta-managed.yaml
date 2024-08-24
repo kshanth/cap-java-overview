@@ -13,9 +13,6 @@ modules:
   requires:
   - name: bookstore-auth
   - name: bookstore-db
-  - name: app-api
-    properties:
-      CDS_MULTITENANCY_APPUI_URL: ~{url}
   provides:
   - name: srv-api
     properties:
@@ -40,32 +37,37 @@ modules:
     builder: custom
     commands:
     - npm run build
-- name: bookstore
-  type: approuter.nodejs
-  path: app/router
+
+- name: bookstore-dest-content
+  type: com.sap.application.content
   requires:
-  - name: bookstore-repo-runtime
-  - name: srv-api
-    group: destinations
-    properties:
-      forwardAuthToken: true
-      name: srv-api
-      url: ~{srv-url}
-  - name: bookstore-auth
   - name: bookstore-destination-service
-    group: destinations
-    properties:
-      forwardAuthToken: false
-      name: ui5
-      url: https://ui5.sap.com
-  provides:
-  - name: app-api
-    properties:
-      url: ${default-url}
+    parameters:
+      content-target: true
+  - name: bookstore-repo-host
+    parameters:
+      service-key:
+        name: bookstore-repo-key
+  - name: bookstore-auth
+    parameters:
+      service-key:
+        name: bookstore-auth-key
   parameters:
-    disk-quota: 256M
-    keep-existing-routes: true
-    memory: 256M
+    content:
+      instance:
+        destinations:
+        - Name: bookstore-repo-host
+          ServiceInstanceName: bookstore-html5-srv
+          ServiceKeyName: bookstore-repo-key
+          sap.cloud.service: ui5app
+        - Authentication: OAuth2UserTokenExchange
+          Name: bookstore-auth
+          ServiceInstanceName: bookstore-auth
+          ServiceKeyName: bookstore-auth-key
+          sap.cloud.service: ui5app
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
 - name: bookstore-app-content
   type: com.sap.application.content
   path: .
@@ -99,6 +101,7 @@ resources:
       xsappname: bookstore-${org}-${space}
     path: ./xs-security.json
     service: xsuaa
+    service-name: bookstore-auth
     service-plan: application
 - name: bookstore-db
   type: com.sap.xs.hdi-container
@@ -111,16 +114,13 @@ resources:
     service: html5-apps-repo
     service-name: bookstore-html5-srv
     service-plan: app-host
-- name: bookstore-repo-runtime
-  type: org.cloudfoundry.managed-service  
-  parameters:
-    service: html5-apps-repo
-    service-plan: app-runtime
 - name: bookstore-destination-service
   type: org.cloudfoundry.managed-service
+  requires:
+    - name: srv-api
   parameters:
     config:
-      HTML5Runtime_enabled: false
+      HTML5Runtime_enabled: true
       init_data:
         instance:
           destinations:
@@ -129,6 +129,13 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            Name: srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+            HTML5.ForwardAuthToken: true
+            HTML5.DynamicDestination: true
           existing_destinations_policy: update
       version: 1.0.0
     service: destination
