@@ -1,0 +1,35 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "bookstore",
+      "request": "launch",
+      "mainClass": "customer.bookstore.Application",
+      "projectName": "bookstore",
+      "cwd": "${workspaceFolder}/bookstore"
+    },
+    {
+      "type": "java",
+      "name": "cloud-sdk-sample",
+      "request": "launch",
+      "mainClass": "customer.cloud_sdk_sample.Application",
+      "projectName": "cloud-sdk-sample",
+      "cwd": "${workspaceFolder}/cloud-sdk-sample",
+      "env": {
+        "destinations": "[{\"name\":\"ES5\",\"url\":\"https://remote-s4-grouchy-lizard-xz.cfapps.us20.hana.ondemand.com/\", \"TrustAll\":true}]"
+      }
+    },
+    {
+      "type": "java",
+      "name": "products-service",
+      "request": "launch",
+      "mainClass": "customer.products_service.Application",
+      "projectName": "products-service",
+      "cwd": "${workspaceFolder}/products-service"
+    }
+  ]
+}

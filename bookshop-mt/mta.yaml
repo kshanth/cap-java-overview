@@ -1,0 +1,121 @@
+_schema-version: 3.3.0
+ID: bookshop-mt
+version: 1.0.0-SNAPSHOT
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+modules:
+  - name: bookshop-mt-srv
+    type: java
+    path: srv
+    parameters:
+      buildpack: sap_java_buildpack_jakarta
+      readiness-health-check-type: http
+      readiness-health-check-http-endpoint: /actuator/health
+    properties:
+      SPRING_PROFILES_ACTIVE: cloud,sandbox
+      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
+      CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests=true --batch-mode
+      build-result: target/*-exec.jar
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: app-api
+        properties:
+          CDS_MULTITENANCY_APPUI_URL: ~{url}
+      - name: bookshop-mt-auth
+      - name: bookshop-mt-db
+      - name: mtx-api
+        properties:
+          CDS_MULTITENANCY_SIDECAR_URL: ~{mtx-url}
+      - name: bookshop-mt-registry
+
+  - name: bookshop-mt
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    properties:
+      TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: mtx-api
+        group: destinations
+        properties:
+          name: mtx-api # must be used in xs-app.json as well
+          url: ~{mtx-url}
+      - name: bookshop-mt-auth
+    provides:
+      - name: app-api
+        properties:
+          url: ${default-url}
+
+  - name: bookshop-mt-mtx
+    type: nodejs
+    path: mtx/sidecar
+    requires:
+      - name: bookshop-mt-db
+      - name: bookshop-mt-auth
+    build-parameters:
+      builder: custom
+      build-result: gen
+      commands:
+        - npm run build
+      requires:
+        - name: bookshop-mt-srv
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
+resources:
+  - name: bookshop-mt-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: bookshop-mt-${org}-${space}
+        tenant-mode: shared
+  - name: bookshop-mt-db
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
+  - name: bookshop-mt-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
+    parameters:
+      service: saas-registry
+      service-plan: application
+      config:
+        xsappname: bookshop-mt-${org}-${space}
+        appName: bookshop-mt-${org}-${space}
+        displayName: bookshop-mt
+        description: A simple CAP project.
+        category: 'Category'
+        appUrls:
+          getDependencies: ~{srv-api/srv-url}/mt/v1.0/subscriptions/dependencies
+          onSubscription: ~{srv-api/srv-url}/mt/v1.0/subscriptions/tenants/{tenantId}
+          onSubscriptionAsync: true
+          onUnSubscriptionAsync: true
+          onUpdateDependenciesAsync: true
+          callbackTimeoutMillis: 300000 # Increase if your deployments are taking longer than that

@@ -23,6 +23,24 @@
         <groupId>com.sap.cloud.sdk</groupId>
         <artifactId>sdk-core</artifactId>
     </dependency>
+    <dependency>
+        <groupId>com.sap.cds</groupId>
+        <artifactId>cds-feature-remote-odata</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+        <artifactId>connectivity-apache-httpclient4</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+        <artifactId>resilience</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.sap.hcp.cf.logging</groupId>
+        <artifactId>cf-java-logging-support-logback</artifactId>
+        <version>3.8.4</version>
+    </dependency>
     ```            
 
 
