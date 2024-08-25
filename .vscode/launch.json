@@ -30,6 +30,14 @@
       "mainClass": "customer.products_service.Application",
       "projectName": "products-service",
       "cwd": "${workspaceFolder}/products-service"
+    },
+    {
+      "type": "java",
+      "name": "Attach",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 8000     
     }
+
   ]
 }
