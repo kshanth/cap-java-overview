@@ -91,8 +91,9 @@
 5. Now start your application by running `cd srv && mvn cds:watch` in the terminal and open it in a new tab   
 
 6. Enhance the Bookstore by incorporating custom code, specifically referring to the `OrdersService.java` handler 
-7. Restart and test the application using HTTP requests from `requests.http` file
-    
+7. Add rest controller and expose 
+6. Restart and test the application using HTTP requests from `requests.http` file
+ 
 ## Authentication 
 
 1. Edit the pom.xml in the srv directory and add the cds-starter-cloudfoundry dependency 
