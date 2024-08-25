@@ -1,0 +1,27 @@
+
+---
+spring:
+  config.activate.on-profile: default
+  sql.init.schema-locations: classpath:schema-h2.sql
+  logging.level.org.springframework: OFF
+cds:
+  data-source.auto-config.enabled: false
+  remote.services:
+    EPM_REF_APPS_PO_APV_SRV:
+      type: "odata-v2"
+      http:
+        suffix: "/sap/opu/odata/sap"
+      destination:
+        name: "ES5"
+---
+spring:
+  config.activate.on-profile: cloud
+cds:
+  index-page.enabled: true
+  remote.services:
+    EPM_REF_APPS_PO_APV_SRV:
+      type: "odata-v2"
+      http:
+        suffix: "/sap/opu/odata/sap"
+      destination:
+        name: "ES5"

@@ -1,0 +1,12 @@
+{
+  "welcomeFile": "index.html",
+  "routes": [
+    {
+      "source": "/sap/opu/odata/(.*)$",
+      "target": "/sap/opu/odata/$1",
+      "csrfProtection": false,
+      "destination": "ES5",
+      "authenticationType": "none"
+    }
+  ]
+}

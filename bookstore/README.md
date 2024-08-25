@@ -160,4 +160,10 @@
     ```
 5. Implement authentication and authorization on SAP BTP, followed by testing the application.
 
-In the upcoming tutorial, you will create a Fiori UI using this service
+## SAP Fiori App Using SAP Business Application Studio
+**Detailed Instructions:** 
+- [Create an SAP Fiori App Using SAP Business Application Studio](https://developers.sap.com/tutorials/appstudio-fioriapps-create.html)
+- [Create an SAP Fiori Elements Application](https://developers.sap.com/tutorials/fiori-tools-cap-create-application.html)
+
+
+

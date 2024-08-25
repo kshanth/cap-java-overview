@@ -1,0 +1,10 @@
+---
+applications:
+- name: remote-s4
+  random-route: true
+  buildpack: nodejs_buildpack
+  memory: 512M  
+services:
+    - bookstore-auth
+    - bookstore-destination-service
+    

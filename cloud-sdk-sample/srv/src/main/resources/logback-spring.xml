@@ -1,0 +1,36 @@
+<configuration debug="false" scan="false">
+
+    <appender name="STDOUT-JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder" />
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date %highlight(%-5level) %cyan([%thread] - [%logger]) [%mdc] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <springProfile name="!cloud">
+        <root level="${LOG_ROOT_LEVEL:-INFO}">
+            <appender-ref ref="STDOUT" />
+        </root>
+        <logger name="com.sap.cds.handlers" level="${LOG_APP_LEVEL:-INFO}" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="com.sap.cds.remote.wire" level="${LOG_APP_LEVEL:-INFO}" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="com.sap.cds.remote.odata" level="${LOG_APP_LEVEL:-TRACE}" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>       
+       
+        <turboFilter class="com.sap.hcp.cf.logback.filter.CustomLoggingTurboFilter" />
+    </springProfile>
+    <springProfile name="cloud">
+        <root level="${LOG_ROOT_LEVEL:-INFO}">
+            <appender-ref ref="STDOUT-JSON" />
+        </root>        
+        <turboFilter class="com.sap.hcp.cf.logback.filter.CustomLoggingTurboFilter" />
+    </springProfile>
+</configuration>
