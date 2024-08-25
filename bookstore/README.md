@@ -91,7 +91,7 @@
 5. Now start your application by running `cd srv && mvn cds:watch` in the terminal and open it in a new tab   
 
 6. Enhance the Bookstore by incorporating custom code, specifically referring to the `OrdersService.java` handler 
-7. Add rest controller and expose 
+7. Incorporate a REST controller into your application and explore the integration possibilities between the SAP Cloud Application Programming Model and Spring Boot.
 6. Restart and test the application using HTTP requests from `requests.http` file
  
 ## Authentication 
